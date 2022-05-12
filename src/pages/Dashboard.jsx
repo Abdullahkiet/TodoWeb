@@ -1,16 +1,13 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import GoalForm from "../components/GoalForm";
-import GoalItem from "../components/GoalItem";
 import Spinner from "../components/Spinner";
-import { getGoals, reset } from "../features/goals/goalSlice";
+import { gettasks, reset } from "../features/tasks/taskSlice";
 
 function Dashboard() {
   const dispatch = useDispatch();
 
-  const { goals, isLoading, isError, message } = useSelector(
-    (state) => state.goals
+  const { tasks, isLoading, isError, message } = useSelector(
+    (state) => state.tasks
   );
 
   useEffect(() => {
@@ -18,7 +15,7 @@ function Dashboard() {
       console.log(message);
     }
 
-    dispatch(getGoals());
+    dispatch(gettasks());
 
     return () => {
       dispatch(reset());
@@ -36,13 +33,13 @@ function Dashboard() {
         <p>Todo Dashboard</p>
       </section>
 
-      <GoalForm />
+      <taskForm />
 
       <section className="content">
-        {goals.length > 0 ? (
-          <div className="goals">
-            {goals.map((goal) => (
-              <GoalItem key={goal._id} goal={goal} />
+        {tasks.length > 0 ? (
+          <div className="tasks">
+            {tasks.map((task) => (
+              <taskItem key={task._id} task={task} />
             ))}
           </div>
         ) : (

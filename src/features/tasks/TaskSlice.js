@@ -1,20 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import goalService from "./goalService";
+import taskService from "./TaskService";
 
 const initialState = {
-  goals: [],
+  tasks: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-// Create new goal
-export const createGoal = createAsyncThunk(
-  "goals/create",
-  async (goalData, thunkAPI) => {
+// Create new task
+export const createTasks = createAsyncThunk(
+  "tasks/create",
+  async (taskData, thunkAPI) => {
     try {
-      return await goalService.createGoal(goalData);
+      return await taskService.createTask(taskData);
     } catch (error) {
       const message =
         (error.response &&
@@ -27,12 +27,12 @@ export const createGoal = createAsyncThunk(
   }
 );
 
-// Get user goals
-export const getGoals = createAsyncThunk(
-  "goals/getAll",
+// Get tasks
+export const getTasks = createAsyncThunk(
+  "tasks/getAll",
   async (_, thunkAPI) => {
     try {
-      return await goalService.getGoals();
+      return await taskService.getTasks();
     } catch (error) {
       const message =
         (error.response &&
@@ -45,12 +45,12 @@ export const getGoals = createAsyncThunk(
   }
 );
 
-// Delete user goal
-export const deleteGoal = createAsyncThunk(
-  "goals/delete",
+// Delete task
+export const deleteTasks = createAsyncThunk(
+  "tasks/delete",
   async (id, thunkAPI) => {
     try {
-      return await goalService.deleteGoal(id);
+      return await taskService.deleteTask(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -63,51 +63,51 @@ export const deleteGoal = createAsyncThunk(
   }
 );
 
-export const goalSlice = createSlice({
-  name: "goal",
+export const taskSlice = createSlice({
+  name: "task",
   initialState,
   reducers: {
     reset: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createGoal.pending, (state) => {
+      .addCase(createTasks.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createGoal.fulfilled, (state, action) => {
+      .addCase(createTasks.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.goals.push(action.payload);
+        state.tasks.push(action.payload);
       })
-      .addCase(createGoal.rejected, (state, action) => {
+      .addCase(createTasks.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getGoals.pending, (state) => {
+      .addCase(getTasks.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getGoals.fulfilled, (state, action) => {
+      .addCase(getTasks.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.goals = action.payload;
+        state.tasks = action.payload;
       })
-      .addCase(getGoals.rejected, (state, action) => {
+      .addCase(getTasks.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(deleteGoal.pending, (state) => {
+      .addCase(deleteTasks.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteGoal.fulfilled, (state, action) => {
+      .addCase(deleteTasks.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.goals = state.goals.filter(
-          (goal) => goal._id !== action.payload.id
+        state.tasks = state.tasks.filter(
+          (task) => task._id !== action.payload.id
         );
       })
-      .addCase(deleteGoal.rejected, (state, action) => {
+      .addCase(deleteTasks.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -115,5 +115,5 @@ export const goalSlice = createSlice({
   },
 });
 
-export const { reset } = goalSlice.actions;
-export default goalSlice.reducer;
+export const { reset } = taskSlice.actions;
+export default taskSlice.reducer;
